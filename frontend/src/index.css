@@ -1,0 +1,30 @@
+@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+@theme {
+  --font-sans: "Poppins", sans-serif;
+}
+
+@layer components {
+  .btn {
+    @apply bg-gray-500 text-white rounded-lg px-4 py-2 
+  uppercase tracking-widest text-xs cursor-pointer 
+  transition-all duration-200 hover:bg-gray-800;
+  }
+
+  .btn-delete {
+    @apply bg-red-500 text-white rounded-lg px-4 py-2 
+  uppercase tracking-widest text-xs cursor-pointer 
+  transition-all duration-200 hover:bg-red-600;
+  }
+
+  .btn-edit {
+    @apply bg-blue-500 text-white rounded-lg px-4 py-2 
+  uppercase tracking-widest text-xs cursor-pointer 
+  transition-all duration-200 hover:bg-blue-600;
+  }
+
+  .form-input {
+    @apply border-b  mb-2   py-2 px-2 outline-none placeholder:text-amber-300 focus:border-gray-600 transition-colors duration-200;
+  }
+}

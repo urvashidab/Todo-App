@@ -1,0 +1,65 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime files
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Build folders
+dist/
+build/
+
+# Frontend build output (Vite)
+frontend/dist/
+
+# Coverage
+coverage/
+
+# Cache
+.cache/
+.parcel-cache/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+
+# Temporary files
+tmp/
+temp/
+
+# ESLint cache
+.eslintcache
+
+# TypeScript
+*.tsbuildinfo
+
+
+
+
+# Test output
+test-results/
+
+# Misc
+*.tgz
