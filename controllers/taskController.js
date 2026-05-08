@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Task from "../model/taskModel.js";
 
 // new task
@@ -55,6 +56,13 @@ export const getAllTasks = async (req, res) => {
 // get one task by id
 export const getOneTask = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid ID format",
+      });
+    }
+
     const oneTask = await Task.findById(req.params.id);
     if (!oneTask) {
       return res.status(404).json({
@@ -81,6 +89,13 @@ export const getOneTask = async (req, res) => {
 
 export const deleteTask = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid ID format",
+      });
+    }
+
     const deletedTask = await Task.findByIdAndDelete(req.params.id);
     if (!deletedTask) {
       return res.status(404).json({
@@ -105,6 +120,12 @@ export const deleteTask = async (req, res) => {
 // update task
 export const updateTask = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid ID format",
+      });
+    }
     const updatedTask = await Task.findByIdAndUpdate(
       req.params.id,
       {
