@@ -2,41 +2,37 @@ import mongoose from "mongoose";
 import Task from "../model/taskModel.js";
 
 // new task
-export const newTask = async (req, res) => {
+export const newTask = async (req, res, next) => {
   try {
     const { task } = req.body;
 
     // empty filed
     if (!task) {
-      return res.status(400).json({
-        message: "Field can not be empty",
-      });
+      const error = new Error("Field can not be empty");
+      error.statusCode = 400;
+
+      return next(error);
     }
     // success
-    const newTask = await Task.create({ task });
+    const createdTask = await Task.create({ task });
     return res.status(201).json({
       success: true,
       message: "New task has been created",
-      newTask,
+      createdTask,
     });
   } catch (err) {
-    return res.status(500).json({
-      success: false,
-      message: "Error while creating new task",
-      error: err.message,
-    });
+    next(err);
   }
 };
 
 // get all the tasks
-export const getAllTasks = async (req, res) => {
+export const getAllTasks = async (req, res, next) => {
   try {
     const tasks = await Task.find();
     if (tasks.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "No tasks found",
-      });
+      const error = new Error("Tasks not found");
+      error.statusCode = 404;
+      return next(error);
     }
 
     // success
@@ -45,30 +41,24 @@ export const getAllTasks = async (req, res) => {
       tasks,
     });
   } catch (err) {
-    return res.status(500).json({
-      success: false,
-      message: "Error while fetching all the tasks",
-      error: err.message,
-    });
+    next(err);
   }
 };
 
 // get one task by id
-export const getOneTask = async (req, res) => {
+export const getOneTask = async (req, res, next) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid ID format",
-      });
+      const error = new Error("Invalid ID Format");
+      error.statusCode = 400;
+      return next(error);
     }
 
     const oneTask = await Task.findById(req.params.id);
     if (!oneTask) {
-      return res.status(404).json({
-        success: false,
-        message: "Task not found",
-      });
+      const error = new Error("Task not found");
+      error.statusCode = 404;
+      return next(error);
     }
 
     // success
@@ -77,31 +67,25 @@ export const getOneTask = async (req, res) => {
       oneTask,
     });
   } catch (err) {
-    return res.status(500).json({
-      success: false,
-      message: "Error while getting a task",
-      error: err.message,
-    });
+    next(err);
   }
 };
 
 // delete task
 
-export const deleteTask = async (req, res) => {
+export const deleteTask = async (req, res, next) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid ID format",
-      });
+      const error = new Error("Invalid ID Format");
+      error.statusCode = 400;
+      return next(error);
     }
 
     const deletedTask = await Task.findByIdAndDelete(req.params.id);
     if (!deletedTask) {
-      return res.status(404).json({
-        success: false,
-        message: "Task not found",
-      });
+      const error = new Error("Task not found");
+      error.statusCode = 404;
+      return next(error);
     }
     // success
     return res.status(200).json({
@@ -109,36 +93,40 @@ export const deleteTask = async (req, res) => {
       message: "Task has been deleted",
     });
   } catch (err) {
-    return res.status(500).json({
-      success: false,
-      message: "Error while deleting the task",
-      error: err.message,
-    });
+    next(err);
   }
 };
 
 // update task
-export const updateTask = async (req, res) => {
+export const updateTask = async (req, res, next) => {
   try {
+    const { task, completed } = req.body;
+
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid ID format",
-      });
+      const error = new Error("Invalid ID Format");
+      error.statusCode = 400;
+      return next(error);
     }
+
+    // for empty field
+    if (task !== undefined && task.trim() === "") {
+      const error = new Error("Task field can not be empty");
+      error.statusCode = 400;
+      return next(error);
+    }
+
     const updatedTask = await Task.findByIdAndUpdate(
       req.params.id,
       {
-        task: req.body.task,
-        completed: req.body.completed,
+        task,
+        completed,
       },
-      { new: true },
+      { new: true, runValidators: true },
     );
     if (!updatedTask) {
-      return res.status(404).json({
-        success: false,
-        message: "Task not found",
-      });
+      const error = new Error("Task not found");
+      error.statusCode = 404;
+      return next(error);
     }
     // success
     return res.status(200).json({
@@ -147,10 +135,6 @@ export const updateTask = async (req, res) => {
       updatedTask,
     });
   } catch (err) {
-    return res.status(500).json({
-      success: false,
-      message: "Error while updating the task",
-      error: err.message,
-    });
+    next(err);
   }
 };

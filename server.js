@@ -3,6 +3,7 @@ dotenv.config();
 import express from "express";
 import router from "./routes/taskRoute.js";
 import connectDB from "./config/db.js";
+import errorMiddleware from "./middlewares/errorMiddleware.js";
 
 const app = express();
 connectDB(); // connect database
@@ -16,6 +17,8 @@ app.get("/", (req, res) => {
 // routes
 app.use("/api/tasks", router);
 
+// global error handler middleware
+app.use(errorMiddleware);
 const port = process.env.PORT || 8080;
 // inititalize server
 app.listen(port, () => {
