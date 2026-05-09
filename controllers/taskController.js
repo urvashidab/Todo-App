@@ -48,12 +48,6 @@ export const getAllTasks = async (req, res, next) => {
 // get one task by id
 export const getOneTask = async (req, res, next) => {
   try {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      const error = new Error("Invalid ID Format");
-      error.statusCode = 400;
-      return next(error);
-    }
-
     const oneTask = await Task.findById(req.params.id);
     if (!oneTask) {
       const error = new Error("Task not found");
@@ -75,11 +69,11 @@ export const getOneTask = async (req, res, next) => {
 
 export const deleteTask = async (req, res, next) => {
   try {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      const error = new Error("Invalid ID Format");
-      error.statusCode = 400;
-      return next(error);
-    }
+    // if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    //   const error = new Error("Invalid ID Format");
+    //   error.statusCode = 400;
+    //   return next(error);
+    // }
 
     const deletedTask = await Task.findByIdAndDelete(req.params.id);
     if (!deletedTask) {
@@ -101,12 +95,6 @@ export const deleteTask = async (req, res, next) => {
 export const updateTask = async (req, res, next) => {
   try {
     const { task, completed } = req.body;
-
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      const error = new Error("Invalid ID Format");
-      error.statusCode = 400;
-      return next(error);
-    }
 
     // for empty field
     if (task !== undefined && task.trim() === "") {
