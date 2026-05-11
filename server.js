@@ -4,10 +4,12 @@ import express from "express";
 import router from "./routes/taskRoute.js";
 import connectDB from "./config/db.js";
 import errorMiddleware from "./middlewares/errorMiddleware.js";
+import cors from "cors";
 
 const app = express();
 connectDB(); // connect database
 // middlewares
+app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {

@@ -13,13 +13,13 @@
   }
 
   .btn-edit {
-    @apply bg-[#d1fae5] text-[#065f46] border border-[#6ee7b7] rounded-lg px-4 py-2
+    @apply bg-[#d1fae5] text-[#065f46] border border-[#6ee7b7] rounded-lg px-3 py-1.5
   uppercase tracking-widest text-xs cursor-pointer
   transition-all duration-200 hover:bg-[#a7f3d0] hover:text-[#064e3b];
   }
 
   .btn-delete {
-    @apply bg-[#ffe4e6] text-[#e11d48] border border-[#fda4af] rounded-lg px-4 py-2
+    @apply bg-[#ffe4e6] text-[#e11d48] border border-[#fda4af] rounded-lg px-3 py-1.5
   uppercase tracking-widest text-xs cursor-pointer
   transition-all duration-200 hover:bg-[#fecdd3] hover:text-[#be123c];
   }

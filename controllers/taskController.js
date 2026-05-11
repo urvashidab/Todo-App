@@ -29,11 +29,6 @@ export const newTask = async (req, res, next) => {
 export const getAllTasks = async (req, res, next) => {
   try {
     const tasks = await Task.find();
-    if (tasks.length === 0) {
-      const error = new Error("Tasks not found");
-      error.statusCode = 404;
-      return next(error);
-    }
 
     // success
     return res.status(200).json({
@@ -69,12 +64,6 @@ export const getOneTask = async (req, res, next) => {
 
 export const deleteTask = async (req, res, next) => {
   try {
-    // if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    //   const error = new Error("Invalid ID Format");
-    //   error.statusCode = 400;
-    //   return next(error);
-    // }
-
     const deletedTask = await Task.findByIdAndDelete(req.params.id);
     if (!deletedTask) {
       const error = new Error("Task not found");
