@@ -33,7 +33,8 @@ const Task = () => {
 
   // add new task
 
-  const addTask = async () => {
+  const addTask = async (e) => {
+    e.preventDefault();
     if (!newTask.trim()) {
       return;
     }
@@ -41,7 +42,7 @@ const Task = () => {
       const response = await Api.post("/tasks", {
         task: newTask,
       });
-      setTasks([...tasks, response.data.task]);
+      setTasks([...tasks, response.data.createdTask]);
       setNewTask("");
     } catch (err) {
       console.log(err);
@@ -178,7 +179,7 @@ const Task = () => {
                   {/* if we are doing editing then show save button otherwise  edit button */}
                   {editID === task._id ? (
                     <button
-                      type="submit"
+                      type="button"
                       onClick={() => saveEdit(task._id)}
                       className="btn-save"
                     >
@@ -187,7 +188,7 @@ const Task = () => {
                   ) : (
                     <button
                       className="btn-edit"
-                      type="submit"
+                      type="button"
                       onClick={() => handleEditText(task)}
                     >
                       Edit
@@ -195,6 +196,7 @@ const Task = () => {
                   )}
                   <button
                     className="btn-delete"
+                    type="button"
                     onClick={() => deleteTask(task._id)}
                   >
                     Delete
