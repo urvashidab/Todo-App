@@ -11,7 +11,8 @@ connectDB(); // connect database
 // middlewares
 app.use(
   cors({
-    origin: "https://todo-app-seven-phi-46.vercel.app/",
+    origin: "https://todo-app-git-main-urvashi-dabgotras-projects.vercel.app",
+
     credentials: true,
   }),
 );
