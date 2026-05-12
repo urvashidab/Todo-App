@@ -5,14 +5,23 @@ const Task = () => {
   const [tasks, setTasks] = useState([]);
   const [error, setError] = useState("");
   const [newTask, setNewTask] = useState("");
+  const [editText, setEditText] = useState("");
+  const [editID, setEditID] = useState(null);
 
   const handleChange = (e) => setNewTask(e.target.value);
+  const handleEditText = (task) => {
+    setEditID(task._id);
+    setEditText(task.task);
+  };
+
+  const handleEditChange = (e) => setEditText(e.target.value);
 
   // fetch all tasks
   const getAllTasks = async () => {
     try {
       const response = await Api.get("/tasks");
       setTasks(response.data.tasks);
+      // console.log(response.data.tasks);
     } catch (err) {
       console.log(err);
       setError("Failed to load tasks");
@@ -52,7 +61,7 @@ const Task = () => {
     }
   };
 
-  // update task
+  // update completed status.(toggle)
   const updateTask = async (id, completed) => {
     try {
       const response = await Api.put(`/tasks/${id}`, {
@@ -65,6 +74,28 @@ const Task = () => {
     } catch (err) {
       console.log(err);
       setError("Failed to update task");
+    }
+  };
+
+  // edit task text
+  const saveEdit = async (id) => {
+    if (!editText.trim()) {
+      return;
+    }
+    try {
+      const response = await Api.put(`/tasks/${id}`, {
+        task: editText,
+      });
+      const updatedTasks = tasks.map((task) =>
+        task._id === id ? response.data.updatedTask : task,
+      );
+
+      setTasks(updatedTasks);
+      setEditID(null);
+      setEditText("");
+    } catch (err) {
+      console.log(err);
+      setError("Failed to edit text");
     }
   };
 
@@ -105,7 +136,7 @@ const Task = () => {
         <div className="flex flex-col gap-4">
           {tasks.length === 0 ? (
             <p className="text-center text-gray-400 py-4">
-              No tasks yet. Add one above!
+              No tasks yet. Add some tasks
             </p>
           ) : (
             tasks.map((task) => (
@@ -120,21 +151,48 @@ const Task = () => {
                     onChange={() => updateTask(task._id, task.completed)}
                     className="w-5 h-5 cursor-pointer accent-blue-600"
                   />
-
-                  <p
-                    className={`text-gray-800 transition-all ${task.completed ? "line-through" : ""}`}
-                  >
-                    {task.task}{" "}
-                  </p>
+                  {/* if editing , then show input otherwise tast.  */}
+                  {editID === task._id ? (
+                    <input
+                      type="text"
+                      value={editText}
+                      autoFocus
+                      onChange={handleEditChange}
+                      className="form-input flex-1"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          saveEdit(task._id);
+                        }
+                      }}
+                    />
+                  ) : (
+                    <p
+                      className={`text-gray-800 transition-all ${task.completed ? "line-through" : ""}`}
+                    >
+                      {task.task}{" "}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex gap-2">
-                  <button
-                    className="btn-edit"
-                    onClick={() => alert("Edit feature coming soon!")}
-                  >
-                    Edit
-                  </button>
+                  {/* if we are doing editing then show save button otherwise  edit button */}
+                  {editID === task._id ? (
+                    <button
+                      type="submit"
+                      onClick={() => saveEdit(task._id)}
+                      className="btn-save"
+                    >
+                      Save
+                    </button>
+                  ) : (
+                    <button
+                      className="btn-edit"
+                      type="submit"
+                      onClick={() => handleEditText(task)}
+                    >
+                      Edit
+                    </button>
+                  )}
                   <button
                     className="btn-delete"
                     onClick={() => deleteTask(task._id)}
