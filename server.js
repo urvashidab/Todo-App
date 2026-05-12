@@ -9,7 +9,12 @@ import cors from "cors";
 const app = express();
 connectDB(); // connect database
 // middlewares
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://todo-app-seven-phi-46.vercel.app/",
+    credentials: true,
+  }),
+);
 app.use(express.json());
 
 app.get("/", (req, res) => {
